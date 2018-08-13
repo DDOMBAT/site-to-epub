@@ -10,8 +10,8 @@ import requests
 from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
-from .helper import save_chapter
 from .binding import novel_to_kindle
+from .helper import save_chapter, save_metafile
 
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
@@ -27,7 +27,7 @@ class LNMTLCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = novel_id
 
         self.home_url = 'https://lnmtl.com'
         self.login_url = 'https://lnmtl.com/auth/login'
@@ -52,6 +52,7 @@ class LNMTLCrawler:
                     print('Logged in.')
                 # end if
                 self.get_chapter_list()
+                self.save_metadata()
                 self.get_chapter_bodies()
                 self.logout()
             # end if
@@ -139,6 +140,20 @@ class LNMTLCrawler:
         print('> [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
+    def save_metadata(self):
+        '''save metadata'''
+        self.novel_name = (self.novel_name or self.novel_id).strip()
+        name = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]',"", self.novel_name)
+        self.output_path = path.join(name, 'json')
+        data = {
+            'id': self.novel_id,
+            'name': self.novel_name,
+            'volumes': [dict(id=v['id'], title=v['title']) for v in self.volumes],
+            'chapters': [dict(id=c['position'], volume=c['volume_id'], title=c['title']) for c in self.chapters]
+        }
+        save_metafile(self.output_path, data)
+    # end def
+
     def get_chapters_by_volume(self, vol_id, page_url):
         url = '%s&volumeId=%s' % (page_url, vol_id)
         print('Visiting', url)
@@ -162,10 +177,13 @@ class LNMTLCrawler:
     def get_chapter_index(self, chapter):
       if not chapter: return None
       for i, chap in enumerate(self.chapters):
-        if chap['site_url'] == chapter or chap['number'] == chapter:
+        if chap['site_url'] == chapter or chap['position'] == chapter:
           return i
         # end if
       # end for
+      if chapter.isdigit():
+          return int(chapter) - 1
+      # end if
       raise Exception('Invalid chapter url')
     # end def
 
@@ -211,14 +229,17 @@ class LNMTLCrawler:
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         # save data
-        save_chapter({
-            'url': url,
-            'novel': self.novel_name,
-            'volume_no': volume_no,
-            'chapter_no': chapter_no,
-            'chapter_title': chapter_title,
-            'body': '<h1>%s</h1>%s' % (chapter_title, body)
-        }, self.output_path)
+        save_chapter(
+            self.output_path,
+            {
+                'url': url,
+                'novel': self.novel_name,
+                'volume_no': volume_no,
+                'chapter_no': chapter_no,
+                'chapter_title': chapter_title,
+                'body': '<h1>%s</h1>%s' % (chapter_title, body)
+            }
+        )
     # end def
 
     def format_text(self, text):

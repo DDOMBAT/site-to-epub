@@ -4,7 +4,21 @@
 import json
 from os import path, makedirs
 
-def save_chapter(content, output_path):
+
+def save_metafile(output_path, content):
+    '''write meta informations'''
+    if not path.exists(output_path):
+        makedirs(output_path)
+    # end if
+    file_name = path.join(output_path, 'meta.json')
+    print('Writing ', file_name)
+    with open(file_name, 'w') as file:
+        file.write(json.dumps(content))
+    # end with
+# end def
+
+
+def save_chapter(output_path, content):
     '''save content to file'''
     vol = content['volume_no'].rjust(2, '0')
     chap = content['chapter_no'].rjust(5, '0')
@@ -13,9 +27,9 @@ def save_chapter(content, output_path):
         makedirs(dir_name)
     except:
         pass
-    # end if
+    # end try
     file_name = path.join(dir_name, chap + '.json')
-    print('Saving ', file_name)
+    print('Writing ', file_name)
     with open(file_name, 'w') as file:
         file.write(json.dumps(content))
     # end with
