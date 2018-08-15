@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "dipu-bd <dipu.sudipta@gmail.com>",
   "description": "Crawls lightnovels and converts them into ebooks",
-  "license": null,
+  "license": "Apache-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
