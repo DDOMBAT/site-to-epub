@@ -1,5 +1,6 @@
 import { Chapter } from './chapter'
 import { Volume } from './volume'
+import { SupportedFormat } from '../models/supported-format'
 
 export interface NovelInfo {
   id: string
@@ -7,6 +8,9 @@ export interface NovelInfo {
   author: string
   coverUrl: string
   _chapters: Chapter[]
+
+  outputPath: string
+  outputFormat: SupportedFormat
 
   add (chapter: Chapter): void
   update (chapter: Chapter): void
