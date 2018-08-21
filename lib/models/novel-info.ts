@@ -36,6 +36,9 @@ export class NovelInfo {
   }
 
   putChapter (chapter: Chapter): void {
+    if (!this.volumes[chapter.volume]) {
+      this.putVolume(new Volume(chapter.volume))
+    }
     this.volumes[chapter.volume].put(chapter)
   }
 

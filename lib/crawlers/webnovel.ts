@@ -1,72 +1,77 @@
 import { Crawler } from '../interfaces/crawler'
-import { NovelInfo } from '../interfaces/novel-info'
-import { SearchResult } from '../interfaces/search-result'
+import { NovelInfo } from '../models/novel-info';
+import { SearchResult } from '../models/search-result'
+import Agent from '../utils/agent'
+import { Volume } from '../models/volume'
+import { Chapter } from '../models/chapter';
 
 export class Webnovel implements Crawler {
   readonly name = 'Webnovel Crawler'
-  _status: string = ''
-  _progress: number = 0
+  private agent: Agent
+  private csrfToken: string
+
+  constructor () {
+    this.agent = new Agent(this.name)
+  }
 
   status (): string {
-    return this._status || ''
+    return this.agent.status || ''
   }
   progress (): number {
-    return this._progress || 0
+    return this.agent.progress || 0
   }
 
-  /**
-   * Returns true if the crawler can crawl the given url.
-   * @param link the url
-   */
   canCrawl (link: string): boolean {
     return !!this.getNovelId(link)
   }
-
-  /**
-   * Parse the novel id from a given url. It must be crawlable by the current
-   * crawler. Otherwise `null` will be returned.
-   * @param link the given url
-   */
   getNovelId (link: string): string | null {
     const possibleIds = /\d{16,17}/g.exec(link)
     return possibleIds && possibleIds[0]
   }
 
-  /**
-   * Search for novels.
-   * @param query the novel query
-   */
-  searchNovels (query: string): Promise<SearchResult[]> {
+  async searchNovels (query: string): Promise<SearchResult[]> {
+    throw Error('Not Implemented')
+  }
+  async searchNovelsNext? (query?: string): Promise<SearchResult[]> {
     throw Error('Not Implemented')
   }
 
-  /**
-   * Get more search results.
-   * The query parameter is optional. If provided, it will be matched against
-   * the ongoing query. Empty result will be returned, if not matched.
-   * @param query
-   */
-  searchNovelsNext? (query?: string): Promise<SearchResult[]> {
-    throw Error('Not Implemented')
+  private async getCsrfToken (): Promise<string> {
+    if (this.csrfToken) {
+      return this.csrfToken
+    }
+    await this.agent.get('https://www.webnovel.com')
+    this.csrfToken = this.agent.cookies['_csrfToken']
+    return this.csrfToken
   }
 
-  /**
-   * Get top level informations about a novel.
-   * @param novelId the novel id
-   */
-  getNovel (novelId: string): Promise<NovelInfo> {
-    throw Error('Not Implemented')
+  async getNovel (novelId: string): Promise<NovelInfo> {
+    novelId = this.getNovelId(novelId)
+    const csrf = await this.getCsrfToken()
+
+    const listUrlPath = 'https://www.webnovel.com/apiajax/chapter/GetChapterList'
+    const chapterUrlPath = 'https://www.webnovel.com/apiajax/chapter/GetContent'
+    const listUrl = `${listUrlPath}?_csrfToken=${csrf}&bookId=${novelId}`
+    const result = await this.agent.json(listUrl)
+
+    const novel = new NovelInfo(novelId)
+    novel.title = result.data.bookInfo.bookName
+    for (const volumeItem of result.data.volumeItems) {
+      const vol = new Volume(volumeItem.index)
+      vol.title = volumeItem.name
+      for (const chapterItem of volumeItem.chapterItems) {
+        const chap = new Chapter(chapterItem.index, vol.index)
+        chap.title = chapterItem.name
+        chap.url = `${chapterUrlPath}?_csrfToken=${csrf}&bookId=${novelId}&chapterId=${chapterItem.id}`
+        vol.put(chap)
+      }
+      novel.putVolume(vol)
+    }
+
+    return novel
   }
 
-  /**
-   * Crawl chapters of a novel. It only crawls chapters with empty `body`. Pass
-   * `true` to the restart parameter to start crawling from the beginning.
-   * @param novel the novel info to crawl
-   * @param start the starting chapter
-   * @param stop the final chapter
-   * @param restart to redownlod already available chapters
-   */
-  crawlChapters (
+  async crawlChapters (
     novel: NovelInfo,
     start?: string | number,
     stop?: string | number,

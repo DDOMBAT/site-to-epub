@@ -1,12 +1,12 @@
 export class Chapter {
   readonly index: number
-  volume: number
+  readonly volume: number
   title: string
   url: string
   body?: string
   hasBody?: boolean
 
-  constructor (index: number) {
+  constructor (index: number, volume: number) {
     this.index = index
   }
 }
