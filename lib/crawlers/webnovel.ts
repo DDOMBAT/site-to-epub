@@ -1,17 +1,17 @@
 import { Crawler } from '../interfaces/crawler'
-import { NovelInfo } from '../models/novel-info';
+import { NovelInfo } from '../models/novel-info'
 import { SearchResult } from '../models/search-result'
-import Agent from '../utils/agent'
+import { Agent } from '../utils/agent'
 import { Volume } from '../models/volume'
-import { Chapter } from '../models/chapter';
+import { Chapter } from '../models/chapter'
 
 export class Webnovel implements Crawler {
   readonly name = 'Webnovel Crawler'
-  private agent: Agent
   private csrfToken: string
+  private agent: Agent
 
-  constructor () {
-    this.agent = new Agent(this.name)
+  constructor (agent?: Agent) {
+    this.agent = agent || new Agent(this.name)
   }
 
   status (): string {

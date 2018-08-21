@@ -1,10 +1,14 @@
 export function parseCookies (cookie: string): {[index: string]: string} {
-  return cookie
-    .match(/(^|(?<=, ))[^=;,]+=[^;]+/g)
-    .map(cookie => cookie.split('=').map(v => v.trim()))
-    .filter(v => v[0].length && v[1].length)
-    .reduce((builder, cur) => {
-      builder[cur[0]] = cur[1]
-      return builder
-    }, {})
+  try {
+    return cookie
+      .match(/(^|(?<=, ))[^=;,]+=[^;]+/g)
+      .map(cookie => cookie.split('=').map(v => v.trim()))
+      .filter(v => v[0].length && v[1].length)
+      .reduce((builder, cur) => {
+        builder[cur[0]] = cur[1]
+        return builder
+      }, {})
+  } catch {
+    return null
+  }
 }
