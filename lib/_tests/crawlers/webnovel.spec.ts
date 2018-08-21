@@ -1,5 +1,7 @@
 import { expect, should } from 'chai'
+import { TestAgent } from '../../utils/agent'
 import { Webnovel } from '../../crawlers/webnovel'
+import { Response, RequestInit } from 'node-fetch'
 
 should()
 
@@ -52,10 +54,38 @@ describe('Crawlers', () => {
     })
 
     it('should get a translated novel info', async () => {
-      this.timeout(15000)
-      const crawler = new Webnovel()
+      const crawler = new Webnovel(new TestAgent((url: string, init?: RequestInit) => {
+        const response = new Response()
+        response.headers.set('set-cookie', '_csrfToken=6UbsNkvEc1de69T4eh5VYx3M7rBQvupZM01MpKtD; expires=Wed, 21-Aug-2019 20:21:31 GMT; path=/; domain=.webnovel.com; secure')
+        response.json = () => new Promise(resolve => resolve(JSON.parse(`{
+          "code":0,
+          "data":{
+            "bookInfo":{
+              "bookName":"The Mech Touch"
+            },
+            "volumeItems":[{
+              "name":"The Novice Mech Designer",
+              "index":1,
+              "chapterItems":[
+                {"id":"28551667062461575","name":"Age of Mechs","index":1},
+                {"id":"28556134382099460","name":"Mech Designer System","index":2}
+              ]
+            },{
+              "name":"Calm Before The Storm",
+              "index":2,
+              "chapterCount":2,
+              "chapterItems":[
+                {"id":"30781096538990117","name":"Advancement","index":106},
+                {"id":"30818079982273309","name":"Injection","index":107}
+              ]
+            }]
+          },
+          "msg":"Success"
+        }`)))
+        return response
+      }))
       const novel = await crawler.getNovel('6838665602002305')
-      console.log(novel)
+      expect(novel.id).to.equal('6838665602002305')
     })
   })
 })

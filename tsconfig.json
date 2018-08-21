@@ -1,4 +1,6 @@
 {
+  "baseUrl": "types",
+  "typeRoots": ["types"],
   "compilerOptions": {
     "lib": [ "es2015" ],
   }
