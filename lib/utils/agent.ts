@@ -4,23 +4,23 @@ import { parseCookies, mergeObjects } from './helper'
 
 export default class Agent {
   name: string
-  cookies: Object
-  headers: Object
+  cookies: {[index: string]: string}
+  headers: {[index: string]: string}
 
   status: string
   progress: number
 
   constructor (name?: string | null) {
     this.name = name || 'Agent'
-    this.cookies = this._defaultCookies()
-    this.headers = this._defaultHeaders()
+    this.cookies = this.defaultCookies()
+    this.headers = this.defaultHeaders()
   }
 
-  _defaultCookies (): Object {
+  private defaultCookies (): {[index: string]: string} {
     return {}
   }
 
-  _defaultHeaders (): Object {
+  private defaultHeaders (): {[index: string]: string} {
     return {
       // 'Connection': 'keep-alive',
       'Accept': 'text/html,application/xhtml+xml,application/xml',
@@ -28,7 +28,7 @@ export default class Agent {
     }
   }
 
-  _buildRequestInit (): RequestInit {
+  private buildRequestInit (): RequestInit {
     const init: RequestInit = {}
     init.headers = new Headers()
     for (const key of Object.keys(this.headers)) {
@@ -39,25 +39,27 @@ export default class Agent {
     return init
   }
 
-  async _fetch (url: string, method: string): Promise<Response> {
-    const init = this._buildRequestInit()
+  private async fetch (url: string, method: string): Promise<Response> {
+    const init = this.buildRequestInit()
     init.method = method || 'GET'
     const result = await fetch(url, init)
     const cookies = parseCookies(result.headers.get('set-cookie') || '')
-    this.cookies = mergeObjects(this.cookies, cookies)
+    Object.keys(cookies).forEach(key => {
+      this.cookies[key] = cookies[key]
+    })
     return result
   }
 
   async get (url: string): Promise<Response> {
-    return this._fetch(url, 'GET')
+    return this.fetch(url, 'GET')
   }
 
-  async json (url: string): Promise<Object> {
+  async json (url: string): Promise<any> {
     const resp = await this.get(url)
     return resp.json()
   }
 
   async post (url: string): Promise<Response> {
-    return this._fetch(url, 'POST')
+    return this.fetch(url, 'POST')
   }
 }
