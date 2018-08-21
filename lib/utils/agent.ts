@@ -1,6 +1,6 @@
-import {toPairs} from 'lodash'
-import fetch, {RequestInit, Response, Headers} from 'node-fetch'
-import {parseCookies, mergeObjects} from './helper'
+import { toPairs } from 'lodash'
+import fetch, { RequestInit, Response, Headers } from 'node-fetch'
+import { parseCookies, mergeObjects } from './helper'
 
 export default class Agent {
   name: string
