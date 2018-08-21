@@ -1,5 +1,5 @@
-import {expect, should} from 'chai'
-import Agent from '../../../lib/utils/agent'
+import { expect, should } from 'chai'
+import Agent from '../../utils/agent'
 
 should()
 

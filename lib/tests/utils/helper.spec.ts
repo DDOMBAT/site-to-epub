@@ -1,5 +1,5 @@
-import {expect, should} from 'chai'
-import {parseCookies, mergeObjects} from '../../../lib/utils/helper'
+import { expect, should } from 'chai'
+import { parseCookies, mergeObjects } from '../..//utils/helper'
 
 should()
 
