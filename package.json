@@ -23,7 +23,7 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run test-lib && npm run unit && npm run e2e",
-    "test-lib": "mocha -r ts-node/register lib/tests/**/*.spec.ts",
+    "test-lib": "mocha -r ts-node/register lib/_tests/**/*.spec.ts",
     "unit": "karma start test/unit/karma.conf.js",
     "postinstall": "npm run lint:fix"
   },

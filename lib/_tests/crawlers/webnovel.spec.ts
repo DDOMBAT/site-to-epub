@@ -51,5 +51,10 @@ describe('Crawlers', () => {
       crawler.canCrawl('548730406').should.equal(false)
     })
 
+    it('should get a translated novel info', async () => {
+      const crawler = new Webnovel()
+      const novel = await crawler.getNovel('6838665602002305')
+      console.log(novel)
+    })
   })
 })
