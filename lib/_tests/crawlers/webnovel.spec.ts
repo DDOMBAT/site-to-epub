@@ -52,6 +52,7 @@ describe('Crawlers', () => {
     })
 
     it('should get a translated novel info', async () => {
+      this.timeout(15000)
       const crawler = new Webnovel()
       const novel = await crawler.getNovel('6838665602002305')
       console.log(novel)
