@@ -17,4 +17,6 @@ export interface NovelInfo {
 
   getChapters (): Chapter[]
   getVolumes (): Volume[]
+
+  getChapter (link: string): Chapter
 }
