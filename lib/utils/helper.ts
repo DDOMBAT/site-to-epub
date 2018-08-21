@@ -1,9 +1,14 @@
+import {merge} from 'lodash'
 
-export const merge = function (...objects) {
-  return Object.assign({}, ...objects.map(v => v || {}))
+export function mergeObjects (...values): Object {
+  const result = {}
+  for (const val of values) {
+    merge(result, val || {})
+  }
+  return result
 }
 
-export const parseCookies = function (cookie) {
+export function parseCookies (cookie: string): Object {
   return cookie
     .match(/(^|(?<=, ))[^=;,]+=[^;]+/g)
     .map(cookie => cookie.split('=').map(v => v.trim()))

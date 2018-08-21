@@ -1,13 +1,14 @@
-import {expect} from 'chai'
-import {parseCookies, merge} from '../../lib/utils'
+import {expect, should} from 'chai'
+import {parseCookies, mergeObjects} from '../../../lib/utils/helper'
+
+should()
 
 describe('Utilities (utils.js)', () => {
   it('should merge two objects ignoring null', () => {
-    merge({}, null).should.deep.equal({})
-    merge({b: 'a'}, null, {a: 3}).should.deep.equal({b: 'a', a: 3})
-    merge(null, null, {a: 3}).should.deep.equal({a: 3})
-    merge().should.deep.equal({})
-    merge(null, null).should.deep.equal({})
+    mergeObjects({}, null).should.deep.equal({})
+    mergeObjects({b: 'a'}, null, {a: 3}).should.deep.equal({b: 'a', a: 3})
+    mergeObjects(null, null, {a: 3}).should.deep.equal({a: 3})
+    mergeObjects(null, null).should.deep.equal({})
   })
 
   it('should parse complex cookies properly', () => {
