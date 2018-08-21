@@ -1,5 +1,6 @@
 export interface SearchResult {
+  id: string
   title: string
-  novelId: string
+  author: string
   imageUrl: string
 }
