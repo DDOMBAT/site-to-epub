@@ -28,7 +28,7 @@ export class NovelInfo {
   }
 
   putVolume (volume: Volume): void {
-    this.volumes[volume.number] = volume
+    this.volumes[volume.index] = volume
   }
 
   getVolume (index: number): Volume {
