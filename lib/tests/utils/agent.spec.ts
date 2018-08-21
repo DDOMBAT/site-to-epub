@@ -3,7 +3,7 @@ import Agent from '../../utils/agent'
 
 should()
 
-describe('Crawlers', () => {
+describe('Utilities', () => {
   describe('Agent', () => {
     it('should accept name parameter', () => {
       const agent = new Agent('Test')
@@ -22,10 +22,10 @@ describe('Crawlers', () => {
       Object.keys(agent.cookies).should.have.lengthOf(0)
     })
 
-    it('should get https://lnmtl.com', async () => {
-      const agent = new Agent()
-      await agent.get('https://lnmtl.com')
-      agent.cookies.should.have.keys('__cfduid', 'XSRF-TOKEN', 'laravel_session')
-    })
+    // it('should get https://lnmtl.com', async () => {
+    //   const agent = new Agent()
+    //   await agent.get('https://lnmtl.com')
+    //   agent.cookies.should.have.keys('__cfduid', 'XSRF-TOKEN', 'laravel_session')
+    // })
   })
 })

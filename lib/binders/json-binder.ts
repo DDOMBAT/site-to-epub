@@ -1,4 +1,4 @@
-import { Binder, BinderConfig } from '../interfaces/binder';
+import { Binder, BinderConfig } from '../interfaces/binder'
 import { BindingFormat } from '../models/binding-format'
 import { NovelInfo } from '../interfaces/novel-info'
 
