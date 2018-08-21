@@ -1,5 +1,5 @@
-import { SearchResult } from './search-result'
-import { NovelInfo } from './novel-info'
+import { SearchResult } from '../models/search-result'
+import { NovelInfo } from '../models/novel-info'
 
 export interface Crawler {
   /// The name of the crawler.

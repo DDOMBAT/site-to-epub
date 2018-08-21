@@ -7,6 +7,9 @@ export default class Agent {
   cookies: Object
   headers: Object
 
+  status: string
+  progress: number
+
   constructor (name?: string | null) {
     this.name = name || 'Agent'
     this.cookies = this._defaultCookies()
@@ -45,7 +48,7 @@ export default class Agent {
     return result
   }
 
-  async get (url: string, method?: string): Promise<Response> {
+  async get (url: string): Promise<Response> {
     return this._fetch(url, 'GET')
   }
 

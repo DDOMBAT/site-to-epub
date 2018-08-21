@@ -1,6 +1,6 @@
 import { Binder, BinderConfig } from '../interfaces/binder'
 import { BindingFormat } from '../models/binding-format'
-import { NovelInfo } from '../interfaces/novel-info'
+import { NovelInfo } from '../models/novel-info'
 
 export class JsonBinder implements Binder {
   readonly format = BindingFormat.json

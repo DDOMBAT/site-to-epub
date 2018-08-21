@@ -1,4 +1,4 @@
-import { NovelInfo } from './novel-info'
+import { NovelInfo } from '../models/novel-info'
 import { BindingFormat } from '../models/binding-format'
 
 export interface Binder {

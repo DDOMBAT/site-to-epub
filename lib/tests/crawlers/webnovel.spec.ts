@@ -11,7 +11,7 @@ describe('Crawlers', () => {
       expect(crawler.name).to.equal('Webnovel Crawler')
     })
 
-    it('should detect get novel id from links', () => {
+    it('should detect novel id from links', () => {
       const crawler = new Webnovel()
       crawler.getNovelId('https://www.webnovel.com/book/6838665602002305').should.equal('6838665602002305')
       crawler.getNovelId('https://www.webnovel.com/book/6838665602002305/God-Of-Slaughter').should.equal('6838665602002305')
