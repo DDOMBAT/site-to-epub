@@ -13,4 +13,5 @@ const chai = require('chai')
 chai.should()
 
 // Require all JS files in for Mocha to consume
-require('require-dir')('./crawlers')
+require('require-dir')('.')
+// require('require-dir')('./crawlers')
