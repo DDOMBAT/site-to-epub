@@ -2,6 +2,8 @@ export interface Chapter {
   number: number
   title: string
   url?: string
-  body: string
-  volume?: number
+  body?: string
+  volume: number
+
+  hasBody?: boolean
 }
