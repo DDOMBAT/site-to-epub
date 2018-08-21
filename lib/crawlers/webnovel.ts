@@ -4,8 +4,8 @@ import { SearchResult } from '../interfaces/search-result'
 
 export class Webnovel implements Crawler {
   readonly name = 'Webnovel Crawler'
-  _status: string
-  _progress: number
+  _status: string = ''
+  _progress: number = 0
 
   status (): string {
     return this._status || ''
@@ -19,7 +19,7 @@ export class Webnovel implements Crawler {
    * @param link the url
    */
   canCrawl (link: string): boolean {
-    throw Error('Not Implemented')
+    return !!this.getNovelId(link)
   }
 
   /**
@@ -28,7 +28,8 @@ export class Webnovel implements Crawler {
    * @param link the given url
    */
   getNovelId (link: string): string | null {
-    throw Error('Not Implemented')
+    const possibleIds = /\d{16,17}/g.exec(link)
+    return possibleIds && possibleIds[0]
   }
 
   /**
